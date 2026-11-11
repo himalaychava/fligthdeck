@@ -1,0 +1,448 @@
+@import "@carbon/styles/css/styles.css";
+
+:root {
+  --cp-accent: #0f62fe;
+}
+
+html, body, #root { height: 100%; }
+body { margin: 0; background: #ffffff; color: #161616; }
+
+.cp-app-shell { padding-top: 3rem; }
+.cp-content { padding: 2rem; max-width: 1600px; margin: 0 auto; }
+
+/* PDF snapshot — same layout as on-screen content column */
+.cp-page-header-shell { position: relative; margin-bottom: 0; }
+.cp-report-page-capture {
+  background: var(--cds-background, #fff);
+  color: var(--cds-text-primary, #161616);
+}
+.cp-report-visible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.cp-report-page-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: normal;
+  flex: 1 1 auto;
+  min-width: 12rem;
+}
+.cp-report-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  flex: 1 1 auto;
+  min-width: min(100%, 28rem);
+}
+.cp-report-header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.cp-report-header-meta span {
+  white-space: nowrap;
+}
+.cp-report-download {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.cp-report-capturing {
+  /* Stabilize typography during html-to-image capture */
+}
+.cp-report-capturing .cp-metric-label,
+.cp-report-capturing .cp-kpi-category,
+.cp-report-capturing .cp-section-title {
+  letter-spacing: normal !important;
+}
+.cp-full-report-export-host {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100000;
+  opacity: 0.01;
+  pointer-events: none;
+  overflow: visible;
+}
+.cp-full-report-host {
+  padding: 2rem;
+}
+.cp-full-report-document {
+  width: 100%;
+}
+.cp-section { margin-bottom: 2rem; }
+
+/* Executive Summary tiles — hover bulge. Scale + lift + deepened shadow, eased
+   so it feels responsive rather than jumpy. Transform (not width/height) so it
+   never reflows the grid or nudges neighbouring tiles. */
+.cp-exec-tile {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+  cursor: default;
+  will-change: transform;
+}
+.cp-exec-tile:hover {
+  transform: scale(1.045) translateY(-3px);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.22);
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-exec-tile,
+  .cp-exec-tile:hover {
+    transition: none;
+    transform: none;
+  }
+}
+.cp-section-title { font-size: 1.25rem; font-weight: 400; margin: 0 0 1rem; color: var(--cds-text-primary); }
+.cp-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.cp-kpi-selector-list { display: flex; flex-direction: column; }
+.cp-kpi-selector-item { padding: 0.75rem 0; }
+@media (max-width: 1024px) { .cp-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .cp-kpi-grid { grid-template-columns: 1fr; } }
+
+/* Removed .cp-kpi-tile custom classes to use standard Carbon ClickableTile */
+
+.cp-kpi-category { font-size: 0.75rem; color: var(--cds-text-secondary); text-transform: uppercase; letter-spacing: 0.32px; }
+.cp-kpi-score { font-size: 2.25rem; font-weight: 300; line-height: 1.1; margin: 0.5rem 0 0.25rem; }
+.cp-kpi-unit { font-size: 1rem; color: var(--cds-text-secondary); margin-left: 0.25rem; }
+.cp-kpi-status { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.32px; }
+.cp-kpi-trend { display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; }
+
+.cp-metric-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; padding: 1rem 0; border-top: 1px solid var(--cds-border-subtle); }
+/* Account header metrics.
+   Two of these carry an info button and one label ("Number of Active
+   Contracts") is far longer than the rest, so the row can no longer hold five
+   rigid tracks: opening the side nav takes 16rem out of the content column and
+   the longest label would clip. auto-fit lets the row drop to four or three
+   tracks and wrap instead, labels wrap rather than overflow, and a shared
+   label height keeps every value on the same baseline. */
+.cp-metric-row.cp-account-header-row {
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1.25rem 1.5rem;
+}
+.cp-metric-label { font-size: 0.75rem; color: var(--cds-text-secondary); text-transform: uppercase; letter-spacing: 0.32px; white-space: nowrap; }
+
+.cp-account-header-row .cp-metric-label {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  white-space: normal;
+  min-height: 2rem;
+}
+/* Nudge the ghost button back toward the label's optical weight. */
+.cp-account-header-row .cp-metric-info { margin-left: -0.25rem; }
+
+.cp-metric-value { font-size: 1.25rem; font-weight: 400; margin-top: 0.25rem; line-height: 1.3; }
+
+.cp-global-metrics-tile { padding: 1.5rem; }
+.cp-global-metrics-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.cp-global-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 2rem;
+  align-items: start;
+}
+.cp-global-metric-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.cp-global-metric-cell .cp-metric-label,
+.cp-global-metric-cell .cp-metric-value {
+  text-align: left;
+  width: 100%;
+}
+.cp-global-metric-sub {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+  margin-left: 0.35rem;
+  font-weight: 400;
+}
+.cp-global-tier-mix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-start;
+}
+@media (max-width: 1056px) {
+  .cp-global-metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .cp-global-metrics-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cp-product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 768px) { .cp-product-grid { grid-template-columns: 1fr; } }
+
+.cp-risk-card { padding: 1rem; background: var(--cds-layer-01); margin-bottom: 0.75rem; position: relative; }
+.cp-risk-severity { position: absolute; top: 1rem; right: 1rem; }
+
+.cp-login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--cds-background); padding: 2rem; }
+.cp-login-card { width: 100%; max-width: 420px; padding: 2.5rem; background: var(--cds-layer-01); }
+.cp-login-brand { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; }
+.cp-login-sub { font-size: 0.875rem; color: var(--cds-text-secondary); margin-bottom: 2rem; }
+
+.cp-sidenav-section { padding: 1rem; border-bottom: 1px solid var(--cds-border-subtle); }
+.cp-sidenav-section h6 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.32px; color: var(--cds-text-secondary); margin: 0 0 0.5rem; }
+
+.cp-key-points { background: var(--cds-layer-02); padding: 1rem; border-left: 4px solid var(--cds-support-info); margin-top: 1rem; }
+.cp-key-points ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+.cp-key-points li { margin-bottom: 0.25rem; }
+
+.cp-view-toggle { display: inline-flex; gap: 4px; padding: 4px; background: var(--cds-layer-02); border-radius: 2px; margin-right: 1rem; }
+.cp-view-toggle button {
+  background: transparent; border: 0; color: var(--cds-text-secondary);
+  padding: 0.25rem 0.75rem; font-size: 0.75rem; cursor: pointer; letter-spacing: 0.32px;
+}
+.cp-view-toggle button.active { background: var(--cds-layer-selected); color: var(--cds-text-primary); }
+
+/* ── Dark theme — side nav ── */
+
+/* Single source of truth for the expanded width — the page shell offsets by
+   the same value so the nav pushes content rather than covering it. */
+:root {
+  --cp-sidenav-width: 256px;
+}
+
+/* Collapsed state — let Carbon control the width (it will be 0/hidden) */
+.cds--side-nav {
+  background-color: #161616 !important;
+  border-right: 1px solid #393939 !important;
+  z-index: 8000 !important;
+}
+
+/* Expanded state only — set our width */
+.cds--side-nav--expanded,
+.cds--side-nav.cds--side-nav--expanded {
+  width: var(--cp-sidenav-width) !important;
+  min-width: var(--cp-sidenav-width) !important;
+  max-width: var(--cp-sidenav-width) !important;
+}
+
+/* Content shifts right by the nav width instead of being overlaid, so the nav
+   stays open and nothing is hidden behind it. */
+.cp-app-shell {
+  transition: margin-left 110ms cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+.cp-app-shell--nav-open {
+  margin-left: var(--cp-sidenav-width);
+}
+
+/* Below Carbon's lg breakpoint there isn't room to push, so the nav overlays
+   as before rather than squeezing the content column. */
+@media (max-width: 1056px) {
+  .cp-app-shell--nav-open {
+    margin-left: 0;
+  }
+}
+
+/* Nav links */
+.cds--side-nav__item > .cds--side-nav__link,
+.cds--side-nav__item > .cds--side-nav__link .cds--side-nav__link-text,
+.cds--side-nav__link-text,
+.cds--side-nav__link > span {
+  color: #ffffff !important;
+}
+.cds--side-nav__item > .cds--side-nav__link:hover,
+.cds--side-nav__item > .cds--side-nav__link:hover .cds--side-nav__link-text {
+  background-color: #393939 !important;
+  color: #ffffff !important;
+}
+.cds--side-nav__item.cds--side-nav__item--active > .cds--side-nav__link,
+.cds--side-nav__link[aria-current="page"] {
+  background-color: #393939 !important;
+  color: #ffffff !important;
+  border-left: 3px solid #0f62fe !important;
+  font-weight: 600 !important;
+}
+
+/* Section separators & labels */
+.cp-sidenav-section {
+  border-bottom: 1px solid #393939 !important;
+}
+.cp-sidenav-section h6 {
+  color: #8d8d8d !important;
+}
+
+/* "View As" select input inside side nav */
+.cds--side-nav .cds--select-input,
+.cds--side-nav .cds--select-input:focus {
+  background-color: #262626 !important;
+  color: #f4f4f4 !important;
+  border-bottom: 1px solid #525252 !important;
+}
+.cds--side-nav .cds--select__arrow {
+  fill: #c6c6c6 !important;
+}
+.cds--side-nav .cds--label {
+  color: #8d8d8d !important;
+}
+
+/* "Contact Client" button inside side nav */
+.cds--side-nav .cds--btn--tertiary {
+  color: #c6c6c6 !important;
+  border-color: #525252 !important;
+}
+.cds--side-nav .cds--btn--tertiary:hover {
+  background-color: #393939 !important;
+  color: #ffffff !important;
+  border-color: #8d8d8d !important;
+}
+
+/* Client selector (combobox) inside side nav — dark */
+.cp-client-selector,
+.cp-client-selector .cds--combo-box,
+.cp-client-selector.cds--text-input,
+.cp-client-selector .cds--text-input,
+.cp-client-selector .cds--list-box,
+.cp-client-selector .cds--list-box__field {
+  background-color: #262626 !important;
+  color: #f4f4f4 !important;
+  border-bottom: 1px solid #525252 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+/* Make the input text itself not overflow — show ellipsis */
+.cp-client-selector input.cds--text-input {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.cp-client-selector .cds--list-box__menu-icon > svg,
+.cp-client-selector .cds--list-box__selection > svg {
+  fill: #c6c6c6 !important;
+}
+.cp-client-selector .cds--text-input::placeholder,
+.cp-client-selector .cds--list-box__label::placeholder,
+.cp-client-selector input::placeholder {
+  font-size: 0.75rem !important;
+  letter-spacing: -0.02em !important;
+  color: #8d8d8d !important;
+}
+/* Results list: starts under the search box's left edge and grows to the
+   right just enough to show the full name + CMR, instead of eliding at the
+   search box width. Never narrower than the search box (nav width minus the
+   section's 1rem padding each side); capped so it stays on screen. The
+   shadow marks it as a pop-up when it extends over the page. Only the list
+   widens — the nav and the search box keep their size. */
+.cp-client-selector .cds--list-box__menu {
+  background-color: #262626 !important;
+  border: 1px solid #525252 !important;
+  width: max-content !important;
+  min-width: calc(var(--cp-sidenav-width) - 2rem) !important;
+  max-width: min(36rem, calc(100vw - var(--cp-sidenav-width))) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45) !important;
+}
+/* The open side nav must not clip that list where it extends past the nav's
+   edge. Carbon only needs the clipping while collapsed (to hide the content);
+   the link list keeps its own scrolling. No visual change to the nav itself. */
+.cds--side-nav.cds--side-nav--expanded {
+  overflow: visible !important;
+}
+.cp-client-selector .cds--list-box__menu-item {
+  border-top-color: #393939 !important;
+}
+.cp-client-selector .cds--list-box__menu-item__option {
+  color: #f4f4f4 !important;
+}
+.cp-client-selector .cds--list-box__menu-item--highlighted .cds--list-box__menu-item__option {
+  background-color: #393939 !important;
+  color: #ffffff !important;
+}
+
+/* Also scope the standalone dropdown/select to side nav only */
+.cds--side-nav .cds--dropdown,
+.cds--side-nav .cds--select-input {
+  background-color: #262626 !important;
+  color: #f4f4f4 !important;
+  border-bottom: 1px solid #525252 !important;
+}
+/* Selected client, shown under the search field so a long name is fully
+   readable rather than elided inside the single-line input. */
+.cp-client-selector__selected {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: #262626;
+  border-left: 3px solid #0f62fe;
+  border-radius: 2px;
+}
+.cp-client-selector__selected-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #f4f4f4;
+  /* Wraps instead of truncating — the whole point of this block. */
+  overflow-wrap: anywhere;
+}
+.cp-client-selector__selected-id {
+  font-size: 0.6875rem;
+  color: #8d8d8d;
+  font-variant-numeric: tabular-nums;
+}
+
+.cp-client-selector__option {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.1rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cp-client-selector__name {
+  font-size: 0.8125rem;
+  color: #f4f4f4;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cp-client-selector__icn {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+  letter-spacing: 0.32px;
+}
+.cp-client-selector__no-results {
+  color: var(--cds-text-secondary, #c6c6c6);
+  font-style: italic;
+  cursor: default;
+  pointer-events: none;
+}
+
+
+/* Tooltip copy. Carbon sets body-01 (0.875rem) already; two things it does not
+   set are width and text-transform. Without a width the sentence renders as one
+   long thin line, and because a tooltip's popover lives inside its trigger, a
+   tooltip on a button sitting in an uppercase label (the account header
+   metrics) inherits that uppercasing and shouts its message. */
+.cds--tooltip-content {
+  max-inline-size: 15rem;
+  text-align: left;
+  text-transform: none;
+}
