@@ -55,3 +55,7 @@ quarantine/
 *.njsproj
 *.sln
 *.sw?
+
+# ── Data snapshots (customer data, never commit) ─────────────────────────────
+*.tar.gz
+flightdeck-data-*
