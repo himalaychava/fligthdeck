@@ -1,0 +1,57 @@
+# ── Secrets and local settings ──────────────────────────────────────────────
+# Each environment has its own .env; only the template is committed.
+.env
+.env.*
+!.env.example
+*.pem
+*.p7b
+*.key
+*.crt
+.dev.vars
+
+# ── Data (lives outside the repo, see DATA_DIR in .env.example) ─────────────
+/data/
+public/data/
+*.xlsx
+*.xls
+*.csv
+*.docx
+~$*
+
+# ── Logs ────────────────────────────────────────────────────────────────────
+logs
+*.log
+nohup.out
+*.out
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Dependencies and build output ───────────────────────────────────────────
+node_modules
+dist
+dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
+.wrangler/
+*.local
+__pycache__/
+
+# ── Local scratch ───────────────────────────────────────────────────────────
+temp/
+quarantine/
+
+# ── Editor and OS files ─────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
