@@ -29,6 +29,9 @@ docs/              background documents
 Not in the repo, by design: **data**, **`.env`** (settings and secrets), logs and
 build output. `.gitignore` blocks them.
 
+[docs/FOLDERS_AND_DATA.md](docs/FOLDERS_AND_DATA.md) explains every folder and
+file, in the code and in the data folder, and which page uses which data.
+
 ## Run it locally
 
 You need Node.js 22 and access to the IBM network (VPN) for the Solution
