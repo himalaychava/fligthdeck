@@ -59,6 +59,7 @@ const AUTHORIZED_EMAILS = [
   "sandeep.p3@ibm.com",
   "alok.singh17@ibm.com",
   "sreejith.p@ibm.com",
+  "shreya.hv@ibm.com",
 ].map(e => e.toLowerCase());
 
 /**
